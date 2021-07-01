@@ -24,6 +24,7 @@ namespace API
                 options.UseSqlite("Data source=datingapp.db");
             });
             services.AddControllers();
+            services.AddCors(); // allow cross origin request send??
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +38,10 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(policy => policy.AllowAnyHeader().
+                AllowAnyMethod().
+                WithOrigins("http://localhost:4200"));
 
             app.UseAuthorization();
 
