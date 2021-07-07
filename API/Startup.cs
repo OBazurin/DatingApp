@@ -1,7 +1,6 @@
-using API.Data;
+using API.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,12 +18,10 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlite("Data source=datingapp.db");
-            });
+            services.AddAplicationServices(_config);
             services.AddControllers();
             services.AddCors(); // allow cross origin request send??
+            services.AddIdentityServices(_config);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +40,7 @@ namespace API
                 AllowAnyMethod().
                 WithOrigins("https://localhost:4200"));
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
